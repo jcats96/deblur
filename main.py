@@ -9,7 +9,7 @@ img = cv2.imread('lena.jpg')
 
 #determine blur angle using Gabor filter
 
-#determine blur length
+#determine blur length using radial basis function network - train in other file?
 
 #compute point spread function
 
