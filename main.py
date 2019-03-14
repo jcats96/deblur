@@ -17,11 +17,11 @@ blength = 2
 
 PSF =  np.zeros((256, 256, 1), dtype = "uint8")
 
-
+PSF[100,100] = 255;
 
 #reconstruct image using weiner filter
 
 
-cv2.imshow('image',img)
+cv2.imshow('PSF',PSF)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
