@@ -5,10 +5,11 @@ import numpy as np
 import cv2
 import math
 
-# Load an image
-img = cv2.imread('lena.jpg')
+# Load an image as greyscale
+img = cv2.imread('lena.jpg',0)
 
-(img_rows,img_cols,img_channels) = img.shape
+
+(img_rows,img_cols) = img.shape
 print('rows '+ str(img_rows))
 print('cols '+ str(img_cols))
 
