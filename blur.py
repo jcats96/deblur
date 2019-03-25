@@ -31,6 +31,7 @@ blur = cv2.filter2D(img,-1,PSF)
 
 #PSF_F =  np.fft.fft2(PSF)
 
+
 img_F = np.fft.fftshift(np.fft.fft2(img))
 
 #
@@ -40,6 +41,10 @@ img_F_mag = 10*np.log(np.abs(img_F))
 #dst_F = img_F*PSF_F
 
 ##dst = np.fft.ifft2(np.fft.ifftshift(dst_F))
+
+
+
+
 
 PSF = PSF *255*100
 cv2.imshow('PSF',PSF.astype(np.uint8))
