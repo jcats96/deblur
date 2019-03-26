@@ -12,7 +12,7 @@ print('rows '+ str(img_rows))
 print('cols '+ str(img_cols))
 
 #deg to rad
-theta = 60
+theta = 20
 blength = 30
 
 #compute point spread function

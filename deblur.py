@@ -13,24 +13,10 @@ img_FFT = np.fft.fft2(img)
 img_FFT = np.fft.fftshift(img_FFT)
 magnitude_spectrum = 10*np.log(np.abs(img_FFT))
 
-#determine blur angle using Gabor filter
-max_norm =0
-max_angle=0
-for angles in range(180):
-    G = cv2.getGaborKernel((11,11),3,angles,2,1)
-    temp_img = cv2.filter2D(magnitude_spectrum,-1,G)
-    temp_norm = cv2.norm(temp_img)
-    print(temp_norm)
-    if temp_norm>max_norm:
-        max_norm = temp_norm
-        max_angle = angles
-print('max response at ' + str(max_angle))
 
-
-
-theta =   60
+theta =   50
 #determine blur length using radial basis function network
-blength = 30
+blength = 10
 
 
 #compute point spread function
@@ -81,12 +67,6 @@ mag_PSF = 10*np.log(np.abs(PSF_fft))
 
 cv2.imshow('img',img.astype(np.uint8))
 
-G = cv2.getGaborKernel((11, 11), 3, max_angle, 2, 1)
-temp_img = cv2.filter2D(magnitude_spectrum, -1, G)
-temp_img = 10*np.log(np.abs(temp_img))
-
-
-cv2.imshow('Gabor',temp_img.astype(np.uint8))
 
 cv2.imshow('img_fft',magnitude_spectrum.astype(np.uint8))
 cv2.imshow('Output FFT',mag_out.astype(np.uint8))
