@@ -12,12 +12,12 @@ print('rows '+ str(img_rows))
 print('cols '+ str(img_cols))
 
 #deg to rad
-theta = 20
-blength = 30
+theta = 80
+blength = 20
 
 #compute point spread function
 
-PSF =  np.zeros((img_rows, img_cols, 1), float)
+PSF =  np.zeros((img_rows, img_cols), float)
 
 cv2.ellipse(PSF,(int(img_rows/2),int(img_cols/2)),(0,int(blength/2)),int(90-theta),0,360,1,2)
 #normalize PSF
@@ -27,33 +27,45 @@ reciprocal = 1/sum
 PSF = PSF*reciprocal
 print('psf done')
 
-blur = cv2.filter2D(img,-1,PSF)
-
-#PSF_F =  np.fft.fft2(PSF)
+PSF_F =  np.fft.fft2(PSF)
 
 
 img_F = np.fft.fftshift(np.fft.fft2(img))
 
-#
 img_F_mag = 10*np.log(np.abs(img_F))
+PSF_F_mag = 10*np.log(np.abs(PSF_F))
+
 #
-#
-#dst_F = img_F*PSF_F
+blur = cv2.filter2D(img,-1,PSF)
 
-##dst = np.fft.ifft2(np.fft.ifftshift(dst_F))
+dst_F = img_F*PSF_F
+dst_F_mag = 10*np.log(np.abs(dst_F))
 
+dst = (np.fft.ifft2(np.fft.ifftshift(dst_F)))
 
+dst = np.real(dst)
 
+blur_F_mag = 10*np.log(np.abs(np.fft.fftshift(np.fft.fft2(blur))))
 
 
 PSF = PSF *255*100
-cv2.imshow('PSF',PSF.astype(np.uint8))
-cv2.imshow('img',np.uint8(img))
-#cv2.imshow('PSF_F',np.uint8(PSF_F))
-cv2.imshow('img_F',np.uint8(img_F_mag))
-cv2.imshow('filtered',np.uint8(blur))
+cv2.imshow('PSF',cv2.convertScaleAbs(PSF))
+cv2.imshow('img',cv2.convertScaleAbs(img))
+cv2.imshow('dst',cv2.convertScaleAbs(dst))
+cv2.imshow('blur',cv2.convertScaleAbs(blur))
+cv2.imshow('PSF_F',cv2.convertScaleAbs(PSF_F_mag))
+cv2.imshow('img_F',cv2.convertScaleAbs(img_F_mag))
+cv2.imshow('dst_F',cv2.convertScaleAbs(dst_F_mag))
+cv2.imshow('blur_F',cv2.convertScaleAbs(blur_F_mag))
+
+cv2.imwrite('lenna.png',img)
 cv2.imwrite('blurred.png',blur)
+cv2.imwrite('burredf.png',cv2.convertScaleAbs(blur_F_mag))
+
 cv2.imwrite('PSF.png',PSF)
+cv2.imwrite('PSF_f.png',cv2.convertScaleAbs(PSF_F_mag))
+cv2.imwrite('dst_f.png',cv2.convertScaleAbs(dst_F_mag))
+
 
 
 cv2.waitKey(0)

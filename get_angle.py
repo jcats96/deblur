@@ -14,13 +14,13 @@ magnitude_spectrum = 10*np.log(np.abs(img_FFT))
 #determine blur angle using Gabor filter
 max_norm =0
 max_angle=0
-for angles in range(0,90,3):
-    G = cv2.getGaborKernel((13,13),3,angles,1.25,1)
+for angles in range(10,80,5):
+    G = cv2.getGaborKernel((7,7),3,angles+90,1.5,1)
     G = cv2.normalize(G,G)
-    temp_img = cv2.filter2D(img_abs,-1,G,cv2.CV_32F)
+    temp_img = cv2.filter2D(magnitude_spectrum,-1,G,cv2.CV_32F)
     temp_norm = np.linalg.norm(temp_img)
    # temp_img = 10 * np.log(np.abs(temp_img))
-    cv2.imshow('temp' + str(angles), np.abs(temp_img).astype(np.uint8))
+    cv2.imshow('temp' + str(angles), cv2.convertScaleAbs(temp_img))
 
     print(angles)
     print(temp_norm)
@@ -29,9 +29,10 @@ for angles in range(0,90,3):
         max_angle = angles
 print('max response at ' + str(max_angle))
 
-G = cv2.getGaborKernel((15,15),5,60,1.75,1)
+G = cv2.getGaborKernel((15,15),5,150,5,1)
 G = G*255
 cv2.imshow('gabor',np.abs(G).astype(np.uint8))
+cv2.imwrite('gabor.png',np.abs(G).astype(np.uint8))
 
 
 cv2.waitKey(0)

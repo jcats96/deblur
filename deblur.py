@@ -14,9 +14,9 @@ img_FFT = np.fft.fftshift(img_FFT)
 magnitude_spectrum = 10*np.log(np.abs(img_FFT))
 
 
-theta =   50
+theta =   20
 #determine blur length using radial basis function network
-blength = 10
+blength = 30
 
 
 #compute point spread function
@@ -36,7 +36,7 @@ print(cv2.sumElems(PSF)[0])
 
 PSF_fft = np.fft.fft2(PSF)
 H_squared = np.power(PSF_fft,2)
-k = 0.001
+k = 0.0005
 weiner_filter = np.divide(np.conj(PSF_fft),H_squared+k)
 #reconstruct image using weiner filter
 print('weiner filter shape')
@@ -51,8 +51,8 @@ for rows in range(img_rows):
         output_img_fft[rows,cols] =weiner_filter[rows,cols]*img_FFT[rows,cols]
 
 
-output_img_fft = np.fft.ifftshift(output_img_fft)
-output_img = np.fft.ifft2(output_img_fft)
+output_img_fft_shifted = np.fft.ifftshift(output_img_fft)
+output_img = np.fft.ifft2(output_img_fft_shifted)
 
 output_img = np.fft.fftshift(output_img)
 
@@ -65,13 +65,18 @@ mag_out = 10*np.log(np.abs(output_img_fft))
 
 mag_PSF = 10*np.log(np.abs(PSF_fft))
 
-cv2.imshow('img',img.astype(np.uint8))
+mag_W = 10*np.log(np.abs(weiner_filter))
+
+cv2.imshow('img',cv2.convertScaleAbs(img))
 
 
-cv2.imshow('img_fft',magnitude_spectrum.astype(np.uint8))
-cv2.imshow('Output FFT',mag_out.astype(np.uint8))
+cv2.imshow('img_fft',cv2.convertScaleAbs(magnitude_spectrum))
+cv2.imshow('Weiner FFT',cv2.convertScaleAbs(mag_W))
+cv2.imwrite('weinerfft.png',cv2.convertScaleAbs(mag_W))
+cv2.imshow('Output FFT',cv2.convertScaleAbs(mag_out))
+cv2.imwrite('output_fft.png',cv2.convertScaleAbs(mag_out))
 #cv2.imshow('magpsf',mag_PSF.astype(np.uint8))
-cv2.imshow('Output',np.abs(output_img).astype(np.uint8))
+cv2.imshow('Output',cv2.convertScaleAbs(output_img))
 #cv2.imwrite('Output.png',output_img.astype(np.uint8))
 cv2.waitKey(0)
 cv2.destroyAllWindows()
